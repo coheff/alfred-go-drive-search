@@ -19,7 +19,7 @@ _The first time you run the workflow you will be prompted to go through Googles'
 
 # Usage
 - Trigger a name search using the keyword `gd` followed by a search query.
-- Trigger a fulltext (document body) search by using the flag `-f=` followed by a search query e.g. `-f=burgers` will search for all documents contains the word "burgers". For longer fulltext searches you can wrap your query in quotes e.g. `-f="best burgers in town"`.
+- Trigger a fulltext (document body) search by using the flag `-f=` followed by a search query e.g. `-f=burgers` will search for all documents containing the word "burgers". For longer fulltext searches you can wrap your query in quotes e.g. `-f="best burgers in town"`.
 - You can combine name & fulltext searches e.g. `menus 2022 -f=burgers` will return a document whose name contains "menus 2022" and body contains "burgers".
 
 # License
