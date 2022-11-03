@@ -6,7 +6,7 @@ Grab the the latest version from the [releases page](https://github.com/coheff/a
 
 If running on macOS Catalina or later, you _**MUST**_ add Alfred to the list of security exceptions for running unsigned software. Step-by-step instructions are available on the awgo wiki [here](https://github.com/deanishe/awgo/wiki/Catalina).
 
-You can also start your application once ("open with terminal") and accept to open it. This way, you're granting Alfred permissions to run this workflow only. To do this, install the workflow and then `right click > open in Finder`. Then right-click `alfred-go-drive-search > open with Terminal`. Then agree to open it. It will run and complain, not being started by Alfred. After that, the workflow will work (until an update of the executable).
+You can also grant permissions to this workflow only. To do this, install the workflow and within the workflow tab right click then select `open in Finder`. Then right-click on "alfred-go-drive-search" and select `open with Terminal`. Agree to open it. It will run and complain about not being started by Alfred. Ignore and close the terminal. After that, the workflow will work (until an update of the executable).
 
 # Prequisites
 In order to use this workflow you _**MUST**_ create your own Google OAuth2 app and generate a `client_id` & `client_secret`. Step-by-step instructions are available [here](https://learn2torials.com/a/google-oauth-setup). Once completed, copy and paste the `client_id` & `client_secret` into their respective workflow environment variables:
