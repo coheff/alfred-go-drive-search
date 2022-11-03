@@ -6,7 +6,7 @@ Grab the the latest version from the [releases page](https://github.com/coheff/a
 
 If running on macOS Catalina or later, you _**MUST**_ add Alfred to the list of security exceptions for running unsigned software. Step-by-step instructions are available on the awgo wiki [here](https://github.com/deanishe/awgo/wiki/Catalina).
 
-You can also start your application once ("with terminal") and except to open it. This way, Alfred will not be able to run just anything. To achieve it, you can install the workflow and then right click it to open the folder in Finder. Then right-click the 'alfred-go-drive-search' and open with Terminal. Then agree to open it. It will run and complain, not being started by Alfred. After that, the workflow will work (until an update of the executable).
+You can also start your application once ("open with terminal") and accept to open it. This way, you're granting Alfred permissions to run this workflow only. To do this, install the workflow and then `right click > open in Finder`. Then right-click `alfred-go-drive-search > open with Terminal`. Then agree to open it. It will run and complain, not being started by Alfred. After that, the workflow will work (until an update of the executable).
 
 # Prequisites
 In order to use this workflow you _**MUST**_ create your own Google OAuth2 app and generate a `client_id` & `client_secret`. Step-by-step instructions are available [here](https://learn2torials.com/a/google-oauth-setup). Once completed, copy and paste the `client_id` & `client_secret` into their respective workflow environment variables:
@@ -23,4 +23,4 @@ _The first time you run the workflow you will be prompted to go through Googles'
 - You can combine name & fulltext searches e.g. `menus 2022 -f=burgers` will return a document whose name contains "menus 2022" and body contains "burgers".
 
 # License
-Distributed under the MIT License. See [LICENSE](https://github.com/coheff/alfred-hunt-tor/blob/main/LICENSE) for more information.
+Distributed under the MIT License. See [LICENSE](https://github.com/coheff/alfred-go-drive-search/blob/main/LICENSE) for more information.
