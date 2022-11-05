@@ -17,7 +17,6 @@ func newToken(config *oauth2.Config) (*oauth2.Token, error) {
 		return nil, err
 	}
 
-	// TODO: fix state to protect against CSRF - https://github.com/douglasmakey/oauth2-example
 	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
 	if exec.Command("open", authURL).Start() != nil {
 		return nil, err
@@ -32,13 +31,13 @@ func newToken(config *oauth2.Config) (*oauth2.Token, error) {
 	return exchangeToken(config, code)
 }
 
-// startWebServer starts a web server and listens for OAuth2 code
-// returned as part of the three-legged auth flow.
+// startWebServer listens for OAuth2 code returned as part of the three-legged auth flow.
 func startWebServer() (chan string, error) {
 	listener, err := net.Listen("tcp", "localhost:1337")
 	if err != nil {
 		return nil, err
 	}
+	defer listener.Close()
 
 	codeCh := make(chan string)
 	go http.Serve(listener, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

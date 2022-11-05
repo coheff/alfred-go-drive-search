@@ -40,8 +40,8 @@ func handleOpts() {
 // via 3-legged OAuth2 flow.
 func token() *oauth2.Token {
 	token, err := cachedToken(kc)
-	if err != nil || !token.Valid() {
-		wf.NewItem("Error retrieving OAuth2 token, it may be expired").
+	if err != nil {
+		wf.NewItem("Error retrieving cached OAuth2 token").
 			Subtitle("Hit return to request a new one").
 			Icon(aw.IconWarning).
 			Arg("--token").
