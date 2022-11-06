@@ -37,7 +37,6 @@ func startWebServer() (chan string, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer listener.Close()
 
 	codeCh := make(chan string)
 	go http.Serve(listener, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

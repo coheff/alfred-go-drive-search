@@ -32,7 +32,7 @@ func init() {
 		ClientID:     wf.Config.Get("client_id"),
 		ClientSecret: wf.Config.Get("client_secret"),
 		Endpoint:     google.Endpoint,
-		RedirectURL:  "http://localhost:1337",
+		RedirectURL:  "http://localhost:1337/callback",
 		Scopes:       []string{drive.DriveMetadataReadonlyScope},
 	}
 }
