@@ -15,7 +15,7 @@ import (
 func run() {
 	arg := alco.ParseQuery(wf.Args()[0], &opts)
 	handleOpts()
-	search(arg, token())
+	search(arg, cachedToken())
 	wf.WarnEmpty("No results", "Try another search?")
 	wf.SendFeedback()
 }
@@ -23,7 +23,10 @@ func run() {
 // handleOpts contains the flag/option logic.
 func handleOpts() {
 	if opts.Link != "" {
-		exec.Command("open", opts.Link).Run()
+		err := exec.Command("open", opts.Link).Run()
+		if err != nil {
+			wf.Fatal(fmt.Sprintf("Error opening Google Drive link: %v", err))
+		}
 		os.Exit(0)
 	}
 	if opts.Token {
@@ -31,32 +34,24 @@ func handleOpts() {
 		if err != nil {
 			wf.Fatal(fmt.Sprintf("Error retrieving new OAuth2 token: %v", err))
 		}
-		cacheToken(kc, token)
+		cacheToken(token)
 		os.Exit(0)
 	}
 }
 
-// token either retrieves a cached token or prompts the user to request a new one
-// via 3-legged OAuth2 flow.
-func token() *oauth2.Token {
-	token, err := cachedToken(kc)
+// search uses the results from the Google Drive API to populate a script filter.
+// If there's an error while searching prompt the user to attempt token refresh
+// (this solves the majority of issues).
+func search(arg string, token *oauth2.Token) {
+	results, err := searchDrive(arg, config, token)
 	if err != nil {
-		wf.NewItem("Error retrieving cached OAuth2 token").
-			Subtitle("Hit return to request a new one").
+		wf.NewItem(fmt.Sprintf("Error searching Google Drive: %v", err)).
+			Subtitle("Hit return to request a new token").
 			Icon(aw.IconWarning).
 			Arg("--token").
 			Valid(true)
 		wf.SendFeedback()
 		os.Exit(0)
-	}
-	return token
-}
-
-// search uses the results from the Google Drive API to populate a script filter.
-func search(arg string, token *oauth2.Token) {
-	results, err := searchDrive(arg, config, token)
-	if err != nil {
-		wf.Fatal(fmt.Sprintf("Error searching Google Drive: %v", err))
 	}
 	for _, result := range results {
 		wf.

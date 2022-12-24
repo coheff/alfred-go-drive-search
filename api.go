@@ -68,7 +68,7 @@ func searchDrive(arg string, config *oauth2.Config, token *oauth2.Token) ([]*res
 	return results, nil
 }
 
-// service creates a new Google Drive Service.
+// service creates a new Google Drive Service -
 // https://github.com/googleapis/google-api-go-client/blob/main/drive/v3/drive-gen.go
 func service(config *oauth2.Config, token *oauth2.Token) (*drive.Service, error) {
 	var context = context.TODO()

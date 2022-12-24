@@ -3,14 +3,13 @@ package main
 import (
 	"encoding/json"
 
-	"github.com/deanishe/awgo/keychain"
 	"golang.org/x/oauth2"
 )
 
 const key = "token"
 
 // cacheToken adds a token to Keychain. If a token already exists, it is replaced.
-func cacheToken(kc *keychain.Keychain, tok *oauth2.Token) error {
+func cacheToken(tok *oauth2.Token) error {
 	jToken, err := json.Marshal(tok)
 	if err != nil {
 		return err
@@ -24,16 +23,16 @@ func cacheToken(kc *keychain.Keychain, tok *oauth2.Token) error {
 }
 
 // cachedToken retrieves a token from Keychain.
-func cachedToken(kc *keychain.Keychain) (*oauth2.Token, error) {
+func cachedToken() *oauth2.Token {
 	jToken, err := kc.Get(key)
 	if err != nil {
-		return nil, err
+		return nil
 	}
 
 	var tok oauth2.Token
 	err = json.Unmarshal([]byte(jToken), &tok)
 	if err != nil {
-		return nil, err
+		return nil
 	}
-	return &tok, nil
+	return &tok
 }
