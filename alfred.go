@@ -1,66 +1,51 @@
 package main
 
 import (
-	"fmt"
-	"os"
+	"log"
+	"net/url"
 	"os/exec"
 
-	alco "github.com/coheff/al-co"
+	ac "github.com/coheff/al-co"
 	aw "github.com/deanishe/awgo"
-	"golang.org/x/oauth2"
+	"github.com/deanishe/awgo/keychain"
 )
 
-// run contains the main logic for the application. It parses the input query
-// and flags, retrieves/requests a token, and triggers a search.
-func run() {
-	arg := alco.ParseQuery(wf.Args()[0], &opts)
-	handleOpts()
-	search(arg, cachedToken())
-	wf.WarnEmpty("No results", "Try another search?")
-	wf.SendFeedback()
+var (
+	Kc   = keychain.New(Wf.BundleID())
+	opts struct {
+		FullText string `short:"f" long:"full" description:"Search full text"`
+	}
+)
+
+type Result struct {
+	Title    string
+	Subtitle string
+	Arg      string
+	Icon     string
 }
 
-// handleOpts contains the flag/option logic.
-func handleOpts() {
-	if opts.Link != "" {
-		err := exec.Command("open", opts.Link).Run()
-		if err != nil {
-			wf.Fatal(fmt.Sprintf("Error opening Google Drive link: %v", err))
-		}
-		os.Exit(0)
-	}
-	if opts.Token {
-		token, err := newToken(config)
-		if err != nil {
-			wf.Fatal(fmt.Sprintf("Error retrieving new OAuth2 token: %v", err))
-		}
-		cacheToken(token)
-		os.Exit(0)
-	}
-}
+func Run() {
+	q := ac.ParseQuery(Wf.Args()[0], &opts)
 
-// search uses the results from the Google Drive API to populate a script filter.
-// If there's an error while searching prompt the user to attempt token refresh
-// (this solves the majority of issues).
-func search(arg string, token *oauth2.Token) {
-	results, err := searchDrive(arg, config, token)
-	if err != nil {
-		wf.NewItem(fmt.Sprintf("Error searching Google Drive: %v", err)).
-			Subtitle("Hit return to request a new token").
-			Icon(aw.IconWarning).
-			Arg("--token").
-			Valid(true)
-		wf.SendFeedback()
-		os.Exit(0)
+	// if query is a link open it
+	if _, err := url.ParseRequestURI(q); err == nil {
+		err := exec.Command("open", q).Run()
+		if err != nil {
+			log.Fatalf("Error opening Google Drive link: %v", err)
+		}
 	}
-	for _, result := range results {
-		wf.
-			NewItem(result.name).
-			Subtitle(fmt.Sprintf("%s - %s", result.owners, result.modified)).
+
+	for _, result := range SearchDrive(q) {
+		Wf.
+			NewItem(result.Title).
+			Subtitle(result.Subtitle).
+			Arg(result.Arg).
 			Icon(&aw.Icon{
-				Value: result.icon,
+				Value: result.Icon,
 			}).
-			Arg("--link=" + result.link).
 			Valid(true)
 	}
+
+	Wf.WarnEmpty("No results", "Try another search?")
+	Wf.SendFeedback()
 }
